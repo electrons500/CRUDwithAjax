@@ -1,0 +1,73 @@
+﻿<!-- Button trigger modal -->
+<button type="button" id="btnModal" style="display:none" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add/Edit Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <div class="row">
+                   <div class="col-md-3">
+                        <label class="control-label">Id:</label>
+                   </div>
+                   <div class="col-md-9">
+                        <div class="form-group">
+                            <input id="txtCustomerId" class="form-control" readonly />
+                        </div>
+                   </div>
+                   <div class="col-md-3">
+                        <label class="control-label">Name:</label>
+                   </div>
+                   <div class="col-md-9">
+                        <div class="form-group">
+                            <input id="txtCustomerName" class="form-control" />
+                        </div>
+                       
+                   </div>
+                   <div class="col-md-3">
+                        <label class="control-label">Age:</label>
+                   </div>
+                   <div class="col-md-9">
+                        <div class="form-group">
+                            <input id="txtCustomerAge" class="form-control" />
+                        </div>
+                       
+                   </div>
+                   <div class="col-md-3">
+                        <label class="control-label">Location:</label>
+                   </div>
+                   <div class="col-md-9">
+                        <div class="form-group">
+                            <input id="txtCustomerLocation" class="form-control" />
+                        </div>
+                      
+                   </div>
+                   <div class="col-md-3">
+                        <label class="control-label">Contact:</label>
+                   </div>
+                   <div class="col-md-9">
+                        <div class="form-group">
+                            <input id="txtCustomerContact" class="form-control" />
+                        </div>
+                       
+                   </div>
+
+
+               </div>
+
+            </div>
+            <div class="modal-footer">
+                <a  href="#" type="button" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a href="#" type="button" class="btn btn-primary" onclick="Save();return false;">Save changes</a>
+            </div>
+        </div>
+    </div>
+</div>

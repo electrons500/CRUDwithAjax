@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Customer list</h1>
+
+<p>
+    <a href="#" class="btn btn-primary" onclick="creatnew(); return false;">New customer</a>
+    @await Html.PartialAsync("_EmployeePartial")
+</p>
+
+<table id="employeeTable" class="table">
+    <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Age
+            </th>
+            <th>
+               Location
+            </th>
+            <th>
+                Contact
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+   
+</table>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var js = jQuery.noConflict(true);
+        js(document).ready(function(){
+           LoadData();
+        });
+
+        function creatnew(){
+           
+            js('#btnModal').trigger('click');
+            clear();
+        }
+        function clear(){
+            js('#txtCustomerId').val('');
+            js('#txtCustomerName').val('');
+            js('#txtCustomerAge').val('');
+            js('#txtCustomerLocation').val('');
+            js('#txtCustomerContact').val('');
+        }
+
+        function Save(){
+            var isproceed = true;
+            var customerId = js('#txtCustomerId').val();
+            var customerName = js('#txtCustomerName').val();
+            var customerAge = js('#txtCustomerAge').val();
+            var customerLocation = js('#txtCustomerLocation').val();
+            var customerContact = js('#txtCustomerContact').val();
+            if(customerName == ''){
+                isproceed = false;
+                js('#txtCustomerName').css('border-color', 'red');
+            }else{
+                js('#txtCustomerName').css('border-color', '#ccc');
+            }
+
+            if(isproceed){
+                var empdata = new Object();
+                empdata.customerId = customerId;
+                empdata.customerName = customerName;
+                empdata.customerAge = customerAge;
+                empdata.customerLocation = customerLocation;
+                empdata.customerContact = customerContact;
+
+
+
+                js.ajax({
+                    type:'post',
+                    url: 'Customers/AddorEditCustomer',
+                    data: empdata,
+                    success:function(data){
+                 
+                        if(data.success){
+                            clear();
+                            alert(data.message);
+                            js('.close').trigger('click');
+                            LoadData();
+
+                           
+                        }else{
+                            alert(data.message);
+                        }
+                    },
+                    error(){
+
+                    }
+                });
+
+
+
+            }
+        }
+
+        function CustomerDetails(element){
+            var customerId = js(element).closest('tr').find('#txtId').val();
+            creatnew();
+            js.ajax({
+                type: 'post',
+                url: 'Customers/GetCustomersDetails',
+                data:{customerId:customerId},
+                async: false,
+                success: function (data) {
+                    if (data != null) {
+                        js('#txtCustomerId').val(data.customerId);
+                        js('#txtCustomerName').val(data.customerName);
+                        js('#txtCustomerAge').val(data.customerAge);
+                        js('#txtCustomerLocation').val(data.customerLocation);
+                        js('#txtCustomerContact').val(data.customerContact);
+
+                    } else {
+                        alert("Failed");
+                    }
+
+                },
+                error() {
+
+                }
+            });
+        }
+
+        function DeleteCustomer(element){ 
+            if(confirm("Do you want to delete this customer?")){
+                var customerId = js(element).closest('tr').find('#txtId').val();
+
+                js.ajax({
+                    type: 'post',
+                    url: 'Customers/DeleteCustomer',
+                    data: { customerId: customerId },
+                    async: false,
+                    success: function (data) {
+                        if (data.success) {
+                            clear();
+                            alert(data.message);
+                            LoadData();
+                        } else {
+                            alert(data.message);
+                        }
+
+                    },
+                    error() {
+
+                    }
+                });
+            }
+        }
+
+
+
+
+
+        function LoadData(){
+            var empdata = [];
+           
+            js.ajax({
+                type: 'post',
+                url: 'Customers/GetCustomers',
+                async:false,
+                success: function (data) {
+                    if (data != null) {
+                        js.each(data,function(key,value){
+                            var editbtn = "<a class='btn btn-success' href = '#' title = 'Edit' onclick = 'CustomerDetails(this)' > <span class='fas fa-edit' > </span></a >"
+                            var deletebtn = "<a class='btn btn-danger' href = '#' title = 'Delete' onclick = 'DeleteCustomer(this)' > <span class='fas fa-trash' > </span></a >"
+                            var hiddenbtn = "<input type='hidden' id='txtId' value='" + value.customerId +"' />"
+                           var actionbtns = hiddenbtn + editbtn + ' | ' + deletebtn;
+                           empdata.push([value.customerId, value.customerName, value.customerAge, value.customerLocation, value.customerContact,actionbtns])
+                           
+                        });
+                    } else {
+                        alert("Failed");
+                    }
+                   
+                },
+                error() {
+
+                }
+            });
+
+            js('#employeeTable').DataTable({
+                destroy:true,
+                data:empdata,
+                width: "100%",
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            });
+
+        }
+
+    </script>
+}
